@@ -14,7 +14,6 @@ categoryElement = document.querySelector('#category')
 amountElement = document.querySelector('#amount')
 statusElement = document.querySelector('#status')
 dateElement = document.querySelector('#date')
-returnElement = document.querySelector('#return')
 deleteElement = document.querySelector('#delete')
 
 categoryElement.value = linkedItem.category 
@@ -34,10 +33,6 @@ amountElement.addEventListener('input',function(event){
 statusElement.addEventListener('change',function(event){
     linkedItem.status = event.target.checked
     updateLocalStorage(recordings)
-})
-
-returnElement.addEventListener('click',function(event){
-    location.assign('/index.html')
 })
 
 deleteElement.addEventListener('click',function(event){
