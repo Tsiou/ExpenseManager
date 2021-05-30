@@ -30,6 +30,7 @@
 			/>
 			<input
 				type="number"
+        min="0"
 				step="0.01"
 				id="amount-element"
 				placeholder="Set Amount (currency)"
@@ -42,7 +43,7 @@
 					name="statusElement"
 				/>(Yes)</label
 			>
-			<button id="submit-element">Submit Record</button>
+			<button class="btn btn-success" id="submit-element">Submit Record</button>
 		</form>
 
 		<h4 id="filter-options">Filter Options:</h4>
@@ -56,7 +57,7 @@
 		<span id="total-expenses"> </span>
 		<span id="fix-flex-ratio"> </span>
 
-		<div id="record-list"></div>
+		<ul id="record-list"></ul>
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js"></script>
 		<script src="idlib.js"></script>

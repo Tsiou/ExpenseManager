@@ -50,11 +50,34 @@ let filteringAndPrinting = function (array, filters) {
 
 //renders the array context so that it can later be appeared the way we want it to the browser
 let itemDOMrender = function (anItem) {
-	let itemDiv = document.createElement("div");
+	let listItem = document.createElement("li");
+	listItem.classList.add("list-group-item");
+
 	let categorySpan = document.createElement("span");
 	let amountSpan = document.createElement("span");
+
+	function createButtonGroup() {
+		const actionsDiv = document.createElement("div");
+		actionsDiv.classList.add("btn-group", "btn-group-sm");
+		actionsDiv.setAttribute("role", "group");
+		actionsDiv.setAttribute("aria-label", "Item actions");
+		return actionsDiv;
+	}
+
+	const buttonGroup = createButtonGroup();
+
 	let deleteButton = document.createElement("button");
+	deleteButton.classList.add("btn", "btn-outline-danger");
+	const deleteIcon = document.createElement("i");
+	deleteIcon.classList.add("fas", "fa-times");
+
 	let editButton = document.createElement("button");
+	editButton.classList.add("btn", "btn-outline-primary");
+	const editIcon = document.createElement("i");
+	editIcon.classList.add("fas", "fa-edit");
+
+	buttonGroup.appendChild(editButton);
+	buttonGroup.appendChild(deleteButton);
 
 	categorySpan.textContent = anItem.category;
 	amountSpan.textContent = anItem.amount;
@@ -71,12 +94,11 @@ let itemDOMrender = function (anItem) {
 		location.assign(`edit.html#${anItem.id}`);
 	});
 
-	itemDiv.appendChild(deleteButton);
-	itemDiv.appendChild(categorySpan);
-	itemDiv.appendChild(amountSpan);
-	itemDiv.appendChild(editButton);
+	listItem.appendChild(categorySpan);
+	listItem.appendChild(amountSpan);
+	listItem.appendChild(buttonGroup);
 
-	return itemDiv;
+	return listItem;
 };
 
 let removeLinkedItem = function (itemID) {
