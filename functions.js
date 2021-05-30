@@ -1,130 +1,115 @@
-
 //Loads saved array data during browser initiation
-let storageLoad = function(){
-    let localData = localStorage.getItem('records')
-    if(localData !== null){
-        return JSON.parse(localData)
-    }
-    else{
-        return[]
-    }
-}
-
+let storageLoad = function () {
+	let localData = localStorage.getItem("records");
+	if (localData !== null) {
+		return JSON.parse(localData);
+	} else {
+		return [];
+	}
+};
 
 //Updates Local Storage with current array status
-let updateLocalStorage = function(array){
-    localStorage.setItem('records',JSON.stringify(array))
-}
-
-
-
+let updateLocalStorage = function (array) {
+	localStorage.setItem("records", JSON.stringify(array));
+};
 
 //filters array and prints results to browser
-let filteringAndPrinting = function (array, filters){
-    let filteredArray = array.filter(function(currentRecord){
-        if (filters.hideFixed && !filters.hideFlex){
-          return currentRecord.category.toLowerCase().includes(filters.textFilter.toLowerCase()) && !currentRecord.status
-        }
-        else if(!filters.hideFixed && filters.hideFlex){
-          return currentRecord.category.toLowerCase().includes(filters.textFilter.toLowerCase()) && currentRecord.status    
-        }
-        else if(filters.hideFixed && filters.hideFixed){
-          return false
-        }
-        else{
-          return currentRecord.category.toLowerCase().includes(filters.textFilter.toLowerCase())
-        }
-    })
-    document.querySelector('#record-list').innerHTML=''
+let filteringAndPrinting = function (array, filters) {
+	let filteredArray = array.filter(function (currentRecord) {
+		if (filters.hideFixed && !filters.hideFlex) {
+			return (
+				currentRecord.category
+					.toLowerCase()
+					.includes(filters.textFilter.toLowerCase()) && !currentRecord.status
+			);
+		} else if (!filters.hideFixed && filters.hideFlex) {
+			return (
+				currentRecord.category
+					.toLowerCase()
+					.includes(filters.textFilter.toLowerCase()) && currentRecord.status
+			);
+		} else if (filters.hideFixed && filters.hideFixed) {
+			return false;
+		} else {
+			return currentRecord.category
+				.toLowerCase()
+				.includes(filters.textFilter.toLowerCase());
+		}
+	});
+	document.querySelector("#record-list").innerHTML = "";
 
-    filteredArray.forEach(function(item){
-        document.querySelector('#record-list').appendChild(itemDOMrender(item))
-    })
-    document.querySelector('#fix-flex-ratio').innerHTML=''
-    document.querySelector('#total-expenses').innerHTML=''
-    
-    document.querySelector('#total-expenses').textContent = totalExpenses(array)
-    document.querySelector('#fix-flex-ratio').textContent = ratioCalc(array)
-    
+	filteredArray.forEach(function (item) {
+		document.querySelector("#record-list").appendChild(itemDOMrender(item));
+	});
+	document.querySelector("#fix-flex-ratio").innerHTML = "";
+	document.querySelector("#total-expenses").innerHTML = "";
 
-}
-
-
+	document.querySelector("#total-expenses").textContent = totalExpenses(array);
+	document.querySelector("#fix-flex-ratio").textContent = ratioCalc(array);
+};
 
 //renders the array context so that it can later be appeared the way we want it to the browser
-let itemDOMrender = function(anItem){
-let itemDiv = document.createElement('div')
-let categorySpan = document.createElement('span')
-let amountSpan = document.createElement('span')
-let deleteButton = document.createElement('button')
-let editButton = document.createElement('button')
+let itemDOMrender = function (anItem) {
+	let itemDiv = document.createElement("div");
+	let categorySpan = document.createElement("span");
+	let amountSpan = document.createElement("span");
+	let deleteButton = document.createElement("button");
+	let editButton = document.createElement("button");
 
-categorySpan.textContent = anItem.category
-amountSpan.textContent = anItem.amount
-deleteButton.textContent = 'Delete'
-editButton.textContent = 'Edit'
+	categorySpan.textContent = anItem.category;
+	amountSpan.textContent = anItem.amount;
+	deleteButton.textContent = "Delete";
+	editButton.textContent = "Edit";
 
-deleteButton.addEventListener('click',function(event){
-   removeLinkedItem(anItem.id)
-   updateLocalStorage(recordings)
-   filteringAndPrinting(recordings,filtersDatabase)
-   })
+	deleteButton.addEventListener("click", function (event) {
+		removeLinkedItem(anItem.id);
+		updateLocalStorage(recordings);
+		filteringAndPrinting(recordings, filtersDatabase);
+	});
 
-editButton.addEventListener('click',function(event){
-    location.assign(`edit.html#${anItem.id}`)
-})
+	editButton.addEventListener("click", function (event) {
+		location.assign(`edit.html#${anItem.id}`);
+	});
 
-   itemDiv.appendChild(deleteButton)
-   itemDiv.appendChild(categorySpan)
-   itemDiv.appendChild(amountSpan)
-   itemDiv.appendChild(editButton)
+	itemDiv.appendChild(deleteButton);
+	itemDiv.appendChild(categorySpan);
+	itemDiv.appendChild(amountSpan);
+	itemDiv.appendChild(editButton);
 
-   return itemDiv
+	return itemDiv;
+};
 
- }
-
-
-let removeLinkedItem = function (itemID){
-    let itemPosition = recordings.findIndex(function(currentItem){
-        return currentItem.id === itemID
-    })
-    if (itemPosition != -1){
-        recordings.splice(itemPosition, 1)
-    }
-}
+let removeLinkedItem = function (itemID) {
+	let itemPosition = recordings.findIndex(function (currentItem) {
+		return currentItem.id === itemID;
+	});
+	if (itemPosition != -1) {
+		recordings.splice(itemPosition, 1);
+	}
+};
 
 //Total Expenses Calculator
-let totalExpenses = function (array){
-    let total = 0
-    array.forEach(function(item){
-       total = total + item.amount
-    })
-  return ` Total Expenses: ${total} |`
-}
+let totalExpenses = function (array) {
+	let total = 0;
+	array.forEach(function (item) {
+		total = total + Number.parseFloat(item.amount);
+	});
+	return ` Total Expenses: ${total.toFixed(2)} |`;
+};
 
 //Fixed - Flexible Expenses Calculator
-let ratioCalc = function (array){
-    let fix = 0
-    let flex = 0
-    array.forEach(function(item){
-       if (item.status){
-           fix = fix + item.amount
-       }
-       else if(!item.status){
-           flex = flex + item.amount
-       }
-    })
-  return ` Fixed / Flexible Ratio: ${fix} / ${flex} `
-}
-
-
-
-
-
-
-
-
-
+let ratioCalc = function (array) {
+	let fix = 0;
+	let flex = 0;
+	array.forEach(function (item) {
+		if (item.status) {
+			fix = fix + Number.parseFloat(item.amount);
+		} else if (!item.status) {
+			flex = flex + Number.parseFloat(item.amount);
+		}
+	});
+	return ` Fixed / Flexible Ratio: ${fix.toFixed(2)} / ${flex.toFixed(2)} `;
+};
 
 /*let itemDOMrendering = function (individualTodo){
   
